@@ -13,6 +13,12 @@ datagroup: elliot_halo_thesis_default_datagroup {
 
 persist_with: elliot_halo_thesis_default_datagroup
 
-explore: matches {}
+explore: matches {
+  join: players {
+    type: left_outer
+    sql_on: ${matches.gamertag} = ${players.gamertag} AND ${matches.playlist_id} = ${players.playlist_id} ;;
+    relationship: many_to_one
+  }
+}
 
 explore: players {}

@@ -20,7 +20,11 @@ view: players {
   dimension: gamertag {
     type: string
     sql: JSON_EXTRACT_SCALAR(${gamertag_column},"$.Gamertag") ;;
-    primary_key: yes
+  }
+
+  dimension: playlist_id {
+    type: string
+    sql: JSON_EXTRACT_SCALAR(${results_column},"$.PlaylistId") ;;
   }
 
   dimension: rank_class {

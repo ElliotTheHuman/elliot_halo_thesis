@@ -20,7 +20,7 @@ view: matches {
     sql: JSON_EXTRACT_SCALAR(${results},"$.MapId") ;;
   }
 
-  dimension: hopper_id {
+  dimension: playlist_id {
     type: string
     sql: JSON_EXTRACT_SCALAR(${results},"$.HopperId") ;;
   }
