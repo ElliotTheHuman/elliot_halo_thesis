@@ -29,9 +29,19 @@ explore: matches {
     sql_on: ${matches.map_id} = ${metadata_maps.id} ;;
     relationship: many_to_one
   }
+
+  join: metadata_weapons {
+    sql_on: ${players.weapon_with_most_kills_id} = ${metadata_weapons.id} ;;
+    relationship: many_to_one
+  }
 }
 
-explore: players {}
+explore: players {
+  join: metadata_weapons {
+    sql_on: ${players.weapon_with_most_kills_id} = ${metadata_weapons.id} ;;
+    relationship: many_to_one
+  }
+}
 
 explore: metadata_playlists {}
 
