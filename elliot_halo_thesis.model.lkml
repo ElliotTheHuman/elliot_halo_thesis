@@ -24,6 +24,11 @@ explore: matches {
     sql_on: ${matches.playlist_id} = ${metadata_playlists.id}  ;;
     relationship: many_to_one
   }
+
+  join: metadata_maps {
+    sql_on: ${matches.map_id} = ${metadata_maps.id} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: players {}

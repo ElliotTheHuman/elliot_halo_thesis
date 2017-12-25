@@ -6,6 +6,7 @@ view: metadata_weapons {
   dimension: results {
     type: string
     sql: ${TABLE}.Results ;;
+    hidden: yes
   }
 
   ############ DIMENSIONS ############

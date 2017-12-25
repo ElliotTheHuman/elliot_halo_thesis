@@ -6,6 +6,7 @@ view: metadata_maps {
   dimension: results {
     type: string
     sql: ${TABLE}.Results ;;
+    hidden: yes
   }
 
   ############ DIMENSIONS ############
@@ -18,5 +19,6 @@ view: metadata_maps {
   dimension: id {
     type: string
     sql: JSON_EXTRACT_SCALAR(${results},"$.id") ;;
+    primary_key: yes
   }
 }
