@@ -17,6 +17,15 @@ view: players {
 
   ############ DIMENSIONS ############
 
+  # HELP ME COMPOUND PRIMARY KEY, YOU'RE MY ONLY HOPE
+  # (GURU CARD: https://discourse.looker.com/t/how-can-i-use-compound-primary-keys-in-looker/310)
+
+  dimension: primary_key_gamertag_playlistid {
+    primary_key:yes
+    hidden: yes
+    sql: CONCAT(${gamertag},' ',${playlist_id}) ;;
+  }
+
   dimension: gamertag {
     type: string
     sql: JSON_EXTRACT_SCALAR(${gamertag_column},"$.Gamertag") ;;
@@ -34,7 +43,7 @@ view: players {
 
   dimension: rank_tier {
     type: number
-    sql: JSON_EXTRACT_SCALAR(${results_column},"$.Csr.Tier" ;;
+    sql: JSON_EXTRACT_SCALAR(${results_column},"$.Csr.Tier") ;;
   }
 
   dimension: total_kills {

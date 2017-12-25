@@ -1,12 +1,24 @@
 view: matches {
   sql_table_name: halo_5_dataset.matches ;;
 
-  ############ DIMENSIONS ############
+  ############ JSON BLOBS ############
 
   dimension: results {
     type: string
     hidden: yes
     sql: ${TABLE}.Results ;;
+  }
+
+  ############ DIMENSIONS ############
+
+  dimension: primary_key_gamertag_playlistid {
+    hidden: yes
+    sql: CONCAT(${gamertag},' ',${playlist_id}) ;;
+  }
+
+  dimension: season_id {
+    type: string
+    sql: JSON_EXTRACT_SCALAR(${results},"$.SeasonId") ;;
   }
 
   dimension: match_id {

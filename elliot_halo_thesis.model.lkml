@@ -16,9 +16,20 @@ persist_with: elliot_halo_thesis_default_datagroup
 explore: matches {
   join: players {
     type: left_outer
-    sql_on: ${matches.gamertag} = ${players.gamertag} AND ${matches.playlist_id} = ${players.playlist_id} ;;
+    sql_on: ${matches.primary_key_gamertag_playlistid} = ${players.primary_key_gamertag_playlistid} ;;
+    relationship: many_to_one
+  }
+
+  join: metadata_playlists {
+    sql_on: ${matches.playlist_id} = ${metadata_playlists.id}  ;;
     relationship: many_to_one
   }
 }
 
 explore: players {}
+
+explore: metadata_playlists {}
+
+explore: metadata_weapons {}
+
+explore: metadata_maps {}
