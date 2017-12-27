@@ -62,9 +62,16 @@ view: matches {
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].TotalAssists") AS FLOAT64) ;;
   }
 
-  dimension: match_completed_date {
-    type: date
+  dimension_group: match_completed_date {
+    type: time
+    timeframes: [date,day_of_week]
+    datatype: date
     sql: TIMESTAMP(JSON_EXTRACT_SCALAR(${results},"$.MatchCompletedDate.ISO8601Date"));;
+  }
+
+  dimension: match_duration {
+    type: string
+    sql: TIMESTAMP(JSON_EXTRACT_SCALAR(${results},"$.MatchDuration"));;
   }
 
   dimension: kill_death_ratio {

@@ -108,4 +108,9 @@ measure: average_accuracy_weapon_with_most_kills {
   value_format_name: percent_2
 }
 
+measure: percent_of_total {
+  type: percent_of_total
+  sql: ${count} ;;
+}
+
 }
