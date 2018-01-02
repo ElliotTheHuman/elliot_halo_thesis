@@ -40,6 +40,7 @@ view: matches {
   dimension: gamertag {
     type: string
     sql: JSON_EXTRACT_SCALAR(${results},"$.Players[0].Player.Gamertag");;
+    drill_fields: [match_id]
   }
 
   dimension: match_rank {
@@ -71,7 +72,7 @@ view: matches {
 
   dimension: match_duration {
     type: string
-    sql: TIMESTAMP(JSON_EXTRACT_SCALAR(${results},"$.MatchDuration"));;
+    sql: LTRIM(JSON_EXTRACT_SCALAR(${results},"$.MatchDuration"),"PT");;
   }
 
   dimension: kill_death_ratio {
