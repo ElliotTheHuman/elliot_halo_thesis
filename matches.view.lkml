@@ -23,7 +23,7 @@ view: matches {
 
   dimension: match_id {
     type: string
-    sql: JSON_EXTRACT_SCALAR(${results},"$.Id.MatchId");;
+    sql: JSON_EXTRACT_SCALAR(${results},"$.Id.MatchId") ;;
     primary_key: yes
   }
 
@@ -39,7 +39,7 @@ view: matches {
 
   dimension: gamertag {
     type: string
-    sql: JSON_EXTRACT_SCALAR(${results},"$.Players[0].Player.Gamertag");;
+    sql: JSON_EXTRACT_SCALAR(${results},"$.Players[0].Player.Gamertag") ;;
     drill_fields: [match_id]
   }
 
@@ -63,17 +63,17 @@ view: matches {
 
   dimension: kills {
     type: number
-    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].TotalKills") AS FLOAT64) ;;
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].TotalKills") AS INT64) ;;
   }
 
   dimension: deaths {
     type: number
-    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].TotalDeaths") AS FLOAT64) ;;
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].TotalDeaths") AS INT64) ;;
   }
 
   dimension: assists {
     type: number
-    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].TotalAssists") AS FLOAT64) ;;
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].TotalAssists") AS INT64) ;;
   }
 
   # GOING IN A PDT
