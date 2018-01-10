@@ -11,7 +11,7 @@ view: matches {
 
   ############ DIMENSIONS ############
 
-  dimension: primary_key_gamertag_playlistid {
+  dimension: compound_gamertag_playlistid {
     hidden: yes
     sql: CONCAT(${gamertag},' ',${playlist_id}) ;;
   }

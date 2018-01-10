@@ -16,7 +16,7 @@ persist_with: elliot_halo_thesis_default_datagroup
 explore: matches {
   join: players {
     type: left_outer
-    sql_on: ${matches.primary_key_gamertag_playlistid} = ${players.primary_key_gamertag_playlistid} ;;
+    sql_on: ${matches.compound_gamertag_playlistid} = ${players.primary_key_gamertag_playlistid} ;;
     relationship: many_to_one
   }
 
@@ -41,6 +41,12 @@ explore: matches {
   join: metadata_csr_designations {
     type: left_outer
     sql_on: ${players.rank_class_id} = ${metadata_csr_designations.class_id} ;;
+    relationship: many_to_one
+  }
+
+  join: matches_facts {
+    type: left_outer
+    sql_on: ${matches.compound_gamertag_playlistid} = ${matches_facts.compound_gamertag_playlistid} ;;
     relationship: many_to_one
   }
 }
