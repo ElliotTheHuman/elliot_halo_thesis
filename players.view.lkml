@@ -36,9 +36,24 @@ view: players {
     sql: JSON_EXTRACT_SCALAR(${results},"$.PlaylistId") ;;
   }
 
-  dimension: rank_class {
+  dimension: rank_class_id {
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Csr.DesignationId") AS INT64);;
+  }
+
+  dimension: total_games_completed {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalGamesCompleted") AS INT64) ;;
+  }
+
+  dimension: total_games_won {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalGamesWon") AS INT64) ;;
+  }
+
+  dimension: total_games_lost {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalGamesLost") AS INT64) ;;
   }
 
   dimension: rank_tier {
@@ -90,10 +105,21 @@ view: players {
               END;;
   }
 
+  dimension: win_percentage {
+    type: number
+    sql: ${total_games_won}/${total_games_completed} ;;
+    value_format_name: percent_2
+  }
+
 ############ MEASURES ############
 
 measure: count {
   type: count
+}
+
+measure: percent_of_total {
+  type: percent_of_total
+  sql: ${count} ;;
 }
 
 measure: average_accuracy_overall {
@@ -108,9 +134,10 @@ measure: average_accuracy_weapon_with_most_kills {
   value_format_name: percent_2
 }
 
-measure: percent_of_total {
-  type: percent_of_total
-  sql: ${count} ;;
+measure: average_lifetime_win_percentage {
+  type: average
+  sql: ${win_percentage} ;;
+  value_format_name: percent_2
 }
 
 }

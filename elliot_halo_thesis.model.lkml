@@ -34,11 +34,21 @@ explore: matches {
     sql_on: ${players.weapon_with_most_kills_id} = ${metadata_weapons.id} ;;
     relationship: many_to_one
   }
+
+  join: metadata_csr_designations {
+    sql_on: ${players.rank_class_id} = ${metadata_csr_designations.class_id} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: players {
   join: metadata_weapons {
     sql_on: ${players.weapon_with_most_kills_id} = ${metadata_weapons.id} ;;
+    relationship: many_to_one
+  }
+
+  join: metadata_csr_designations {
+    sql_on: ${players.rank_class_id} = ${metadata_csr_designations.class_id} ;;
     relationship: many_to_one
   }
 }
@@ -50,3 +60,5 @@ explore: metadata_playlists {}
 explore: metadata_weapons {}
 
 explore: metadata_maps {}
+
+explore: metadata_csr_designations {}

@@ -45,7 +45,20 @@ view: matches {
 
   dimension: match_rank {
     type: number
-    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].Rank") AS FLOAT64);;
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].Rank") AS FLOAT64) ;;
+  }
+
+  dimension: match_result_code {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].Result") AS INT64) ;;
+    hidden: yes
+  }
+
+  dimension: match_result {
+    type: string
+    sql: CASE WHEN ${match_result_code} = 3 THEN "Win"
+              ELSE "Loss"
+              END ;;
   }
 
   dimension: kills {
@@ -63,6 +76,22 @@ view: matches {
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].TotalAssists") AS FLOAT64) ;;
   }
 
+  # GOING IN A PDT
+  dimension: kill_death_ratio {
+    type: number
+    sql: CASE WHEN ${deaths} = 0 THEN ${kills}*1.0/1
+              ELSE ${kills}*1.0/${deaths}
+              END ;;
+    value_format: "0.00"
+  }
+
+  # GOING IN A PDT
+  dimension: kill_death_assist_spread {
+    type: number
+    sql: ${kills} + (1/3)*${assists} - ${deaths};;
+    value_format: "0.00"
+  }
+
   dimension_group: match_completed_date {
     type: time
     timeframes: [date,day_of_week]
@@ -70,17 +99,38 @@ view: matches {
     sql: TIMESTAMP(JSON_EXTRACT_SCALAR(${results},"$.MatchCompletedDate.ISO8601Date"));;
   }
 
-  dimension: match_duration {
+  # GOIGN IN A PDT
+  dimension: match_duration_raw {
     type: string
-    sql: LTRIM(JSON_EXTRACT_SCALAR(${results},"$.MatchDuration"),"PT");;
+    sql: LTRIM(JSON_EXTRACT_SCALAR(${results},"$.MatchDuration"),"PT") ;;
+    hidden: yes
   }
 
-  dimension: kill_death_ratio {
+  # GOING IN A PDT
+  dimension: match_duration_minutes_raw {
     type: number
-    sql: CASE WHEN ${deaths} = 0 THEN ${kills}*1.0/1
-              ELSE ${kills}*1.0/${deaths}
-              END;;
-    value_format: "0.00"
+    sql:  CASE WHEN SUBSTR(${match_duration_raw},3,1) = "M" THEN CAST(SUBSTR(${match_duration_raw},1,2) AS INT64)
+               ELSE CAST(SUBSTR(${match_duration_raw},1,1) AS INT64)
+               END ;;
+    hidden: yes
+  }
+
+  # GOING IN A PDT
+  dimension: match_duration_seconds_raw {
+    type: number
+    sql:  CASE WHEN ${match_duration_minutes_raw} >= 10 AND SUBSTR(${match_duration_raw},5,1) = "." THEN CAST(SUBSTR(${match_duration_raw},4,1) AS INT64)
+               WHEN ${match_duration_minutes_raw} >= 10 AND SUBSTR(${match_duration_raw},6,1) = "." THEN CAST(SUBSTR(${match_duration_raw},4,2) AS INT64)
+               WHEN ${match_duration_minutes_raw} < 10 AND SUBSTR(${match_duration_raw},4,1) = "." THEN CAST(SUBSTR(${match_duration_raw},3,1) AS INT64)
+               WHEN ${match_duration_minutes_raw} < 10 AND SUBSTR(${match_duration_raw},5,1) = "." THEN CAST(SUBSTR(${match_duration_raw},3,2) AS INT64)
+               ELSE NULL
+               END ;;
+    hidden: yes
+  }
+
+  dimension: match_duration_actual {
+    alias: [match_duration]
+    type: number
+    sql: ${match_duration_minutes_raw}*60 + ${match_duration_seconds_raw} ;;
   }
 
   ############ MEASURES ############
@@ -101,4 +151,8 @@ view: matches {
     value_format: "0.00"
   }
 
+  measure: average_match_duration {
+    type: average
+    sql: ${match_duration_actual} ;;
+  }
 }
