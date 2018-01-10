@@ -21,21 +21,25 @@ explore: matches {
   }
 
   join: metadata_playlists {
-    sql_on: ${matches.playlist_id} = ${metadata_playlists.id}  ;;
+    type: left_outer
+    sql_on: ${matches.playlist_id} = ${metadata_playlists.id} ;;
     relationship: many_to_one
   }
 
   join: metadata_maps {
+    type: left_outer
     sql_on: ${matches.map_id} = ${metadata_maps.id} ;;
     relationship: many_to_one
   }
 
   join: metadata_weapons {
+    type: left_outer
     sql_on: ${players.weapon_with_most_kills_id} = ${metadata_weapons.id} ;;
     relationship: many_to_one
   }
 
   join: metadata_csr_designations {
+    type: left_outer
     sql_on: ${players.rank_class_id} = ${metadata_csr_designations.class_id} ;;
     relationship: many_to_one
   }
@@ -43,12 +47,20 @@ explore: matches {
 
 explore: players {
   join: metadata_weapons {
+    type: left_outer
     sql_on: ${players.weapon_with_most_kills_id} = ${metadata_weapons.id} ;;
     relationship: many_to_one
   }
 
   join: metadata_csr_designations {
+    type: left_outer
     sql_on: ${players.rank_class_id} = ${metadata_csr_designations.class_id} ;;
+    relationship: many_to_one
+  }
+
+  join: metadata_playlists {
+    type: left_outer
+    sql_on: ${players.playlist_id} = ${metadata_playlists.id} ;;
     relationship: many_to_one
   }
 }
