@@ -57,7 +57,9 @@ view: matches {
   dimension: match_result {
     type: string
     sql: CASE WHEN ${match_result_code} = 3 THEN "Win"
-              ELSE "Loss"
+              WHEN ${match_result_code} = 2 THEN "Tie"
+              WHEN ${match_result_code} = 1 THEN "Loss"
+              ELSE "DNF"
               END ;;
   }
 
@@ -142,6 +144,12 @@ view: matches {
   measure: average_kill_death_ratio  {
     type: average
     sql: ${kill_death_ratio} ;;
+    value_format: "0.00"
+  }
+
+  measure: average_kill_death_assist_spread {
+    type: average
+    sql: ${kill_death_assist_spread} ;;
     value_format: "0.00"
   }
 
