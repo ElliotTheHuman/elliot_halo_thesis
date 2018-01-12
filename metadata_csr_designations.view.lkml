@@ -14,6 +14,8 @@ view: metadata_csr_designations {
 
   dimension: class_name {
     type: string
-    sql: JSON_EXTRACT_SCALAR(${Results},"$.name") ;;
+    sql: CASE WHEN JSON_EXTRACT_SCALAR(${Results},"$.name") IS NULL THEN "Unranked"
+              ELSE JSON_EXTRACT_SCALAR(${Results},"$.name")
+              END ;;
   }
 }
