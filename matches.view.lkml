@@ -1,4 +1,5 @@
 view: matches {
+  view_label: "Hello"
   sql_table_name: halo_5_dataset.matches ;;
 
   ############ JSON BLOBS ############
@@ -162,5 +163,10 @@ view: matches {
   measure: average_match_duration {
     type: average
     sql: ${match_duration_actual} ;;
+  }
+
+  measure: percent_of_total {
+    type: percent_of_total
+    sql: ${count} ;;
   }
 }
