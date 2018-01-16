@@ -1,5 +1,4 @@
 view: matches {
-  view_label: "Hello"
   sql_table_name: halo_5_dataset.matches ;;
 
   ############ JSON BLOBS ############
@@ -97,7 +96,7 @@ view: matches {
 
   dimension_group: match_completed_date {
     type: time
-    timeframes: [date,day_of_week]
+    timeframes: [date,day_of_week,week,month,raw]
     datatype: date
     sql: TIMESTAMP(JSON_EXTRACT_SCALAR(${results},"$.MatchCompletedDate.ISO8601Date"));;
   }
