@@ -5,6 +5,7 @@ view: metadata_csr_designations {
   dimension: Results {
     type: string
     sql: ${TABLE}.Results ;;
+    hidden: yes
   }
 
   dimension: class_id {

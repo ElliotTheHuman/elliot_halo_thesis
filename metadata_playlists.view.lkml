@@ -26,4 +26,9 @@ view: metadata_playlists {
     sql: JSON_EXTRACT_SCALAR(${results},"$.id") ;;
     primary_key: yes
   }
+
+  dimension: is_ranked {
+    type: yesno
+    sql: ${name} IN ("Slayer", "Free-for-All","Team Arena","HaloWC Preview","Breakout","Snipers","Doubles","SWAT") ;;
+  }
 }

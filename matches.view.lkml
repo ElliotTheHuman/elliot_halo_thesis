@@ -1,5 +1,14 @@
+include: "*.view"
+
 view: matches {
   sql_table_name: halo_5_dataset.matches ;;
+  set: drill_set_1 {
+    fields: [
+      match_id,
+      metadata_playlists.name,
+      metadata_maps.name
+    ]
+  }
 
   ############ JSON BLOBS ############
 
@@ -30,6 +39,7 @@ view: matches {
   dimension: map_id {
     type: string
     sql: JSON_EXTRACT_SCALAR(${results},"$.MapId") ;;
+    html: <a href="https://google.com"</a>  ;;
   }
 
   dimension: playlist_id {
@@ -40,7 +50,11 @@ view: matches {
   dimension: gamertag {
     type: string
     sql: JSON_EXTRACT_SCALAR(${results},"$.Players[0].Player.Gamertag") ;;
-    drill_fields: [match_id]
+    drill_fields: [drill_set_1*]
+    link: {
+      label: "GOOglE"
+      url:"https://google.com/{{ matches.match_rank._value }}"
+    }
   }
 
   dimension: match_rank {
@@ -88,9 +102,9 @@ view: matches {
   }
 
   # GOING IN A PDT
-  dimension: kill_death_assist_spread {
+  dimension: kill_death_plus_minus {
     type: number
-    sql: ${kills} + (1/3)*${assists} - ${deaths};;
+    sql: ${kills} - ${deaths};;
     value_format: "0.00"
   }
 
@@ -130,27 +144,140 @@ view: matches {
   }
 
   dimension: match_duration_actual {
-    alias: [match_duration]
+    label: "Match Duration"
     type: number
     sql: ${match_duration_minutes_raw}*60 + ${match_duration_seconds_raw} ;;
+  }
+
+  dimension: is_team_game {
+    type: string
+    sql: JSON_EXTRACT_SCALAR(${results},"$.IsTeamGame") ;;
+    hidden: yes
+  }
+
+  dimension: winning_team_score {
+    description: "Null if not a team-based mode"
+    type: number
+    sql: CASE WHEN ${is_team_game} = "true" AND JSON_EXTRACT_SCALAR(${results},"$.Teams[0].Rank") = "1"
+                  THEN CAST(JSON_EXTRACT_SCALAR(${results},"$.Teams[0].Score") AS INT64)
+              WHEN ${is_team_game} = "true" AND JSON_EXTRACT_SCALAR(${results},"$.Teams[1].Rank") = "1"
+                  THEN CAST(JSON_EXTRACT_SCALAR(${results},"$.Teams[1].Score") AS INT64)
+              ELSE NULL
+              END ;;
+    group_label: "Team Scores"
+  }
+
+  dimension: losing_team_score {
+    description: "Null if not a team-based mode"
+    type: number
+    sql: CASE WHEN ${is_team_game} = "true" AND JSON_EXTRACT_SCALAR(${results},"$.Teams[0].Rank") = "2"
+                  THEN CAST(JSON_EXTRACT_SCALAR(${results},"$.Teams[0].Score") AS INT64)
+              WHEN ${is_team_game} = "true" AND JSON_EXTRACT_SCALAR(${results},"$.Teams[1].Rank") = "2"
+                  THEN CAST(JSON_EXTRACT_SCALAR(${results},"$.Teams[1].Score") AS INT64)
+              ELSE NULL
+              END ;;
+    group_label: "Team Scores"
+  }
+
+  dimension: team_score_spread {
+    type: number
+    sql: ${winning_team_score} - ${losing_team_score} ;;
   }
 
   ############ MEASURES ############
 
   measure: count {
     type: count
+    drill_fields: [match_id, players.gamertag, kills, assists, deaths]
+    description: "Hello it's me!"
+  }
+
+  measure: team_game_count {
+    type: count
+    filters: {
+      field: is_team_game
+      value: "yes"
+    }
+  }
+
+  measure: count_of_DNFs {
+    type: count
+    drill_fields: [metadata_playlists.name, matches.count]
+    filters: {
+      field: match_result
+      value: "DNF"
+    }
+  }
+
+  measure: average_kills {
+    type: average
+    sql: ${kills} ;;
+    value_format: "0.00"
+  }
+
+  measure: average_deaths {
+    type: average
+    sql: ${deaths} ;;
+    value_format: "0.00"
+  }
+
+  measure: average_assists {
+    type: average
+    sql: ${assists} ;;
+    value_format: "0.00"
   }
 
   measure: average_kill_death_ratio  {
     type: average
     sql: ${kill_death_ratio} ;;
     value_format: "0.00"
+    drill_fields: [players.gamertag, match_id, metadata_playlists.name, kills, assists, deaths]
   }
 
-  measure: average_kill_death_assist_spread {
+  measure: average_kill_death_plus_minus {
     type: average
-    sql: ${kill_death_assist_spread} ;;
+    sql: ${kill_death_plus_minus} ;;
     value_format: "0.00"
+    drill_fields: [players.gamertag, match_id, metadata_playlists.name, kills, assists, deaths]
+  }
+
+  measure: average_winning_team_score {
+    type: average
+    sql: ${winning_team_score} ;;
+    filters: {
+      field: winning_team_score
+      value: "< 400000000"
+    }
+    group_label: "Average Team Scores"
+    value_format_name: decimal_2
+  }
+
+  measure: average_losing_team_score {
+    type: average
+    sql: ${losing_team_score} ;;
+    filters: {
+      field: losing_team_score
+      value: "< 4000000000"
+    }
+    group_label: "Average Team Scores"
+    value_format_name: decimal_2
+
+    drill_fields: [losing_team_score]
+  }
+
+  measure: average_team_score_spread {
+    type: average
+    sql: ${team_score_spread} ;;
+    filters: {
+      field: losing_team_score
+      value: "< 4000000000"
+    }
+    filters: {
+      field: winning_team_score
+      value: "< 4000000000"
+    }
+    group_label: "Average Team Scores"
+    value_format_name: decimal_2
   }
 
   measure: average_match_rank {
@@ -162,10 +289,24 @@ view: matches {
   measure: average_match_duration {
     type: average
     sql: ${match_duration_actual} ;;
+    value_format: "0.00"
+  }
+
+  measure: sum_match_duration {
+    type: sum
+    sql: ${match_duration_actual} ;;
   }
 
   measure: percent_of_total {
     type: percent_of_total
     sql: ${count} ;;
+  }
+
+  measure: percent_of_Did_Not_Finishes {
+    type: number
+    sql: ${count_of_DNFs}/${count} ;;
+    value_format_name: percent_2
+    # Drill field idea: Hey, how many of these did not finishes come from different places?
+    drill_fields: [metadata_playlist.name,matches.count]
   }
 }

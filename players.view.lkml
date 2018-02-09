@@ -1,3 +1,5 @@
+include: "*.view"
+
 view: players {
   sql_table_name: halo_5_dataset.players ;;
 
@@ -49,14 +51,16 @@ view: players {
   dimension: total_games_won {
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalGamesWon") AS INT64) ;;
+    hidden: yes
   }
 
   dimension: total_games_lost {
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalGamesLost") AS INT64) ;;
+    hidden: yes
   }
 
-  dimension: rank_tier {
+  dimension: rank_tier_id {
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Csr.Tier") AS INT64) ;;
   }
@@ -120,6 +124,8 @@ measure: count {
 measure: percent_of_total {
   type: percent_of_total
   sql: ${count} ;;
+
+  drill_fields: [players.gamertag]
 }
 
 measure: average_accuracy_overall {
