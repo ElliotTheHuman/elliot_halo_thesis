@@ -1,7 +1,7 @@
 connection: "halo_database_1"
 
 # include all the views
-include: "*.view"
+include: "*.view.lkml"
 
 # include all the dashboards
 include: "*.dashboard"
@@ -68,6 +68,12 @@ explore: players {
     type: left_outer
     sql_on: ${players.playlist_id} = ${metadata_playlists.id} ;;
     relationship: many_to_one
+  }
+
+  join: matches_facts {
+    type: inner
+    sql_on: ${players.primary_key_gamertag_playlistid} = ${matches_facts.compound_gamertag_playlistid} ;;
+    relationship: one_to_one
   }
 }
 

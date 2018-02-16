@@ -1,4 +1,3 @@
-include: "*.view"
 
 view: matches {
   sql_table_name: halo_5_dataset.matches ;;
@@ -191,6 +190,7 @@ view: matches {
     drill_fields: [match_id, players.gamertag, kills, assists, deaths]
     description: "Hello it's me!"
   }
+
 
   measure: team_game_count {
     type: count

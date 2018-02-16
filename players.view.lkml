@@ -51,13 +51,11 @@ view: players {
   dimension: total_games_won {
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalGamesWon") AS INT64) ;;
-    hidden: yes
   }
 
   dimension: total_games_lost {
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalGamesLost") AS INT64) ;;
-    hidden: yes
   }
 
   dimension: rank_tier_id {
@@ -68,13 +66,11 @@ view: players {
   dimension: total_shots_fired_overall {
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalShotsFired") AS FLOAT64);;
-    hidden: yes
   }
 
   dimension: total_shots_landed_overall {
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalShotsLanded") AS FLOAT64) ;;
-    hidden: yes
   }
 
   dimension: accurary_overall {
@@ -85,9 +81,44 @@ view: players {
     value_format_name: percent_2
   }
 
+  dimension: total_kills {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalKills") AS INT64) ;;
+  }
+
+  dimension: total_assists {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalAssists") AS INT64) ;;
+  }
+
+  dimension: total_deaths {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalDeaths") AS INT64) ;;
+  }
+
+  dimension: total_headshots {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalHeadshots") AS INT64) ;;
+  }
+
+  dimension: total_weapon_damage {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalWeaponDamage") AS FLOAT64) ;;
+  }
+
   dimension: weapon_with_most_kills_id {
     type: string
     sql: JSON_EXTRACT_SCALAR(${results},"$.WeaponWithMostKills.WeaponId.StockId") ;;
+  }
+
+  dimension: total_kills_with_weapon_with_most_kills {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.WeaponWithMostKills.TotalKills") AS INT64) ;;
+  }
+
+  dimension: total_damage_with_weapon_with_most_kills {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.WeaponWithMostKills.TotalDamageDealt") AS INT64) ;;
   }
 
   dimension: total_shots_fired_weapon_with_most_kills {
@@ -115,6 +146,8 @@ view: players {
     value_format_name: percent_2
   }
 
+
+
 ############ MEASURES ############
 
 measure: count {
@@ -140,7 +173,7 @@ measure: average_accuracy_weapon_with_most_kills {
   value_format_name: percent_2
 }
 
-measure: average_lifetime_win_percentage {
+measure: average_win_percentage {
   type: average
   sql: ${win_percentage} ;;
   value_format_name: percent_2
