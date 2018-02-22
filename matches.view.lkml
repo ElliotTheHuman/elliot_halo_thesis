@@ -109,9 +109,9 @@ view: matches {
 
   dimension_group: match_completed_date {
     type: time
-    timeframes: [date,day_of_week,week,month,raw]
     datatype: date
-    sql: TIMESTAMP(JSON_EXTRACT_SCALAR(${results},"$.MatchCompletedDate.ISO8601Date"));;
+    timeframes: [date,day_of_week,week,month,raw]
+    sql: EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(${results},"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP));;
   }
 
   # GOIGN IN A PDT
@@ -292,9 +292,9 @@ view: matches {
     value_format: "0.00"
   }
 
-  measure: sum_match_duration {
+  measure: sum_match_duration_in_minutes {
     type: sum
-    sql: ${match_duration_actual} ;;
+    sql: ${match_duration_actual}/60.0 ;;
   }
 
   measure: percent_of_total {
@@ -308,5 +308,19 @@ view: matches {
     value_format_name: percent_2
     # Drill field idea: Hey, how many of these did not finishes come from different places?
     drill_fields: [metadata_playlist.name,matches.count]
+  }
+
+  measure: count_of_wins {
+    hidden: yes
+    type: count
+    filters: {
+      field: match_result
+      value: "Win"
+    }
+  }
+
+  measure: win_percentage {
+    type: number
+    sql: ${count_of_wins}/${count} ;;
   }
 }

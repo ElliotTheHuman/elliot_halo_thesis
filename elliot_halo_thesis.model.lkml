@@ -44,9 +44,9 @@ explore: matches {
     relationship: many_to_one
   }
 
-  join: matches_facts {
+  join: matches_avg_kill_death {
     type: left_outer
-    sql_on: ${matches.compound_gamertag_playlistid} = ${matches_facts.compound_gamertag_playlistid} ;;
+    sql_on: ${matches.compound_gamertag_playlistid} = ${matches_avg_kill_death.compound_gamertag_playlistid} ;;
     relationship: many_to_one
   }
 }
@@ -70,9 +70,9 @@ explore: players {
     relationship: many_to_one
   }
 
-  join: matches_facts {
+  join: matches_avg_kill_death {
     type: inner
-    sql_on: ${players.primary_key_gamertag_playlistid} = ${matches_facts.compound_gamertag_playlistid} ;;
+    sql_on: ${players.primary_key_gamertag_playlistid} = ${matches_avg_kill_death.compound_gamertag_playlistid} ;;
     relationship: one_to_one
   }
 }
@@ -89,4 +89,6 @@ explore: metadata_csr_designations {}
 
 ##########################
 
-explore: matches_facts {}
+explore: matches_avg_kill_death {}
+
+explore: matches_sessions {}

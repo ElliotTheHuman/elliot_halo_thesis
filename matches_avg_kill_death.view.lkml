@@ -1,5 +1,5 @@
 # Using this PDT to do expensive calcs and to do measures of measures
-view: matches_facts {
+view: matches_avg_kill_death {
   derived_table: {
     sql:
       SELECT
