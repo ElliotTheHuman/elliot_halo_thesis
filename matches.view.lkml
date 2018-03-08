@@ -3,9 +3,9 @@ view: matches {
   sql_table_name: halo_5_dataset.matches ;;
   set: drill_set_1 {
     fields: [
-      match_id,
       metadata_playlists.name,
-      metadata_maps.name
+      metadata_maps.name,
+      win_percentage
     ]
   }
 
@@ -15,6 +15,33 @@ view: matches {
     type: string
     hidden: yes
     sql: ${TABLE}.Results ;;
+  }
+
+############ DYNAMIC PERIOD ANALYSIS TEST ############
+
+  filter: previous_period_filter {
+    type: date
+    description: "Use this filter for period analysis"
+  }
+
+# SOMETHING ABOUT -1!
+
+  dimension: previous_period {
+    type: string
+    description: "The reporting period as selected by the Previous Period Filter"
+    sql:
+      CASE
+        WHEN {% date_start previous_period_filter %} is not null AND {% date_end previous_period_filter %} is not null /* date ranges or in the past x days */
+          THEN
+            CASE
+              WHEN CAST(${match_completed_date_date} AS DATE) >=  CAST({% date_start previous_period_filter %} AS DATE)
+                AND CAST(${match_completed_date_date} AS DATE) <= CAST({% date_end previous_period_filter %} AS DATE)
+                THEN 'This Period'
+              WHEN CAST(${match_completed_date_date} AS DATE) >= date_add(date_add(CAST({% date_start previous_period_filter %} AS DATE), INTERVAL -1 DAY), INTERVAL -1*date_diff(CAST({% date_end previous_period_filter %} AS DATE),CAST({% date_start previous_period_filter %} AS DATE), DAY) DAY)
+                AND CAST(${match_completed_date_date} AS DATE) <= date_add(CAST({% date_start previous_period_filter %} AS DATE), INTERVAL -1 DAY)
+                THEN 'Previous Period'
+            END
+          END ;;
   }
 
   ############ DIMENSIONS ############
@@ -49,9 +76,9 @@ view: matches {
   dimension: gamertag {
     type: string
     sql: JSON_EXTRACT_SCALAR(${results},"$.Players[0].Player.Gamertag") ;;
-    drill_fields: [drill_set_1*]
+    drill_fields: [match_result, winning_team_score, count]
     link: {
-      label: "GOOglE"
+      label: "hello"
       url:"https://google.com/{{ matches.match_rank._value }}"
     }
   }

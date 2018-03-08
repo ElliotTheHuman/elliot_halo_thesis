@@ -11,20 +11,10 @@ view: matches_avg_kill_death {
              END) AS average_kill_death_ratio_over_matches
       FROM
         matches
-      WHERE
-        {% condition example_f %} JSON_EXTRACT_SCALAR(Results,"$.Players[0].Player.Gamertag") {% endcondition %}
       GROUP BY
         gamertag, playlist_id ;;
 
     sql_trigger_value: 1 ;;
-  }
-
-  filter: example_f {
-    type: string
-  }
-
-  parameter: hello {
-    type: string
   }
 
   dimension: compound_gamertag_playlistid {
