@@ -4,7 +4,7 @@ connection: "halo_database_1"
 include: "*.view.lkml"
 
 # include all the dashboards
-include: "*.dashboard"
+include: "*.dashboard.lkml"
 
 datagroup: elliot_halo_thesis_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -21,6 +21,7 @@ explore: matches {
   }
 
   join: metadata_playlists {
+
     type: left_outer
     sql_on: ${matches.playlist_id} = ${metadata_playlists.id} ;;
     relationship: many_to_one
