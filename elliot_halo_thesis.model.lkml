@@ -82,14 +82,6 @@ explore: players {
 
 explore: metadata_playlists {}
 
-explore: metadata_weapons_1 {
-  view_name: metadata_weapons
-}
-
-explore: metadata_weapons_2 {
-  view_name: metadata_weapons
-}
-
 explore: metadata_maps {}
 
 explore: metadata_csr_designations {}

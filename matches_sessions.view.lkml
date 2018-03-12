@@ -1,7 +1,6 @@
 view: matches_sessions {
   derived_table: {
     sql: SELECT
-        CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.Players[0].Rank") AS FLOAT64)  AS matches_match_rank,
         CAST(CAST(EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) AS TIMESTAMP) AS DATE) AS matches_match_completed_date_date,
         JSON_EXTRACT_SCALAR(matches.Results,"$.Players[0].Player.Gamertag")  AS matches_gamertag,
         COALESCE(SUM(((CASE WHEN SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),3,1) = "M" THEN CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),1,2) AS INT64)
@@ -27,9 +26,11 @@ view: matches_sessions {
        ;;
   }
 
-  dimension: match_rank {
-    type: number
-    sql: ${TABLE}.match_rank ;;
+  dimension: compound_primary_key {
+    hidden: yes
+    type: string
+    sql: CONCAT(${TABLE}.gamertag,' ',${TABLE}.matches_match_completed_date_date) ;;
+    primary_key: yes
   }
 
   dimension_group: completed_date {

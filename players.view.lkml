@@ -44,16 +44,19 @@ view: players {
   }
 
   dimension: total_games_completed {
+    group_label: "Total Games X"
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalGamesCompleted") AS INT64) ;;
   }
 
   dimension: total_games_won {
+    group_label: "Total Games X"
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalGamesWon") AS INT64) ;;
   }
 
   dimension: total_games_lost {
+    group_label: "Total Games X"
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalGamesLost") AS INT64) ;;
   }
@@ -64,11 +67,13 @@ view: players {
   }
 
   dimension: total_shots_fired_overall {
+    group_label: "Total Shots"
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalShotsFired") AS FLOAT64);;
   }
 
   dimension: total_shots_landed_overall {
+    group_label: "Total Shots"
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalShotsLanded") AS FLOAT64) ;;
   }
@@ -112,28 +117,33 @@ view: players {
   }
 
   dimension: total_kills_with_weapon_with_most_kills {
+    group_label: "Weapon with most kills"
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.WeaponWithMostKills.TotalKills") AS INT64) ;;
   }
 
   dimension: total_damage_with_weapon_with_most_kills {
+    group_label: "Weapon with most kills"
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.WeaponWithMostKills.TotalDamageDealt") AS INT64) ;;
   }
 
   dimension: total_shots_fired_weapon_with_most_kills {
+    group_label: "Weapon with most kills"
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.WeaponWithMostKills.TotalShotsFired") AS FLOAT64) ;;
     hidden: yes
   }
 
   dimension: total_shots_landed_weapon_with_most_kills {
+    group_label: "Weapon with most kills"
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.WeaponWithMostKills.TotalShotsLanded") AS FLOAT64) ;;
     hidden: yes
   }
 
   dimension: accuracy_weapon_with_most_kills {
+    group_label: "Weapon with most kills"
     type: number
     sql: CASE WHEN ${total_shots_fired_weapon_with_most_kills} != 0 THEN ${total_shots_landed_weapon_with_most_kills}/${total_shots_fired_weapon_with_most_kills}
               ELSE 0
@@ -146,7 +156,22 @@ view: players {
     value_format_name: percent_2
   }
 
+  dimension: TotalPowerWeaponKills {
+    group_label: "Power Weapon Stats"
+    type: number
+    sql: JSON_EXTRACT_SCALAR(${results},"$.TotalPowerWeaponKills") ;;
+  }
 
+  dimension: TotalPowerWeaponGrabs {
+    group_label: "Power Weapon Stats"
+    type: number
+    sql: JSON_EXTRACT_SCALAR(${results},"$.TotalPowerWeaponGrabs") ;;
+  }
+
+  dimension: TotalGrenadeKills {
+    type: number
+    sql: JSON_EXTRACT_SCALAR(${results},"$.TotalGrenadeKills") ;;
+  }
 
 ############ MEASURES ############
 
@@ -177,6 +202,30 @@ measure: average_win_percentage {
   type: average
   sql: ${win_percentage} ;;
   value_format_name: percent_2
+}
+
+measure: sum_of_total_headshots {
+  type: sum
+  sql: ${total_headshots} ;;
+  hidden: yes
+}
+
+measure: sum_of_total_shots {
+  type: sum
+  sql: ${total_shots_landed_overall} ;;
+  hidden: yes
+}
+
+measure: average_headshot_percentage {
+  type: number
+  sql: ${sum_of_total_headshots}/${sum_of_total_shots} ;;
+  value_format_name: percent_2
+}
+
+measure: sum_of_total_games_played{
+  type: sum
+  sql: ${total_games_completed} ;;
+  value_format_name: decimal_0
 }
 
 }
