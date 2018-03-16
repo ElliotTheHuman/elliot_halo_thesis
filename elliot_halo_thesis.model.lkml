@@ -89,5 +89,3 @@ explore: metadata_csr_designations {}
 ##########################
 
 explore: matches_avg_kill_death {}
-
-explore: matches_sessions {}

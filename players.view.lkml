@@ -156,22 +156,52 @@ view: players {
     value_format_name: percent_2
   }
 
-  dimension: TotalPowerWeaponKills {
-    group_label: "Power Weapon Stats"
+  dimension: loss_percentage {
     type: number
-    sql: JSON_EXTRACT_SCALAR(${results},"$.TotalPowerWeaponKills") ;;
+    sql: ${total_games_lost}/${total_games_completed} ;;
+    value_format_name: percent_2
   }
 
-  dimension: TotalPowerWeaponGrabs {
+  dimension: total_power_weapon_kills {
     group_label: "Power Weapon Stats"
     type: number
-    sql: JSON_EXTRACT_SCALAR(${results},"$.TotalPowerWeaponGrabs") ;;
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalPowerWeaponKills") AS INT64) ;;
   }
 
-  dimension: TotalGrenadeKills {
+  dimension: total_power_weapon_grabs {
+    group_label: "Power Weapon Stats"
     type: number
-    sql: JSON_EXTRACT_SCALAR(${results},"$.TotalGrenadeKills") ;;
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalPowerWeaponGrabs") AS INT64) ;;
   }
+
+  dimension: total_grenade_kills {
+    type: number
+    sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.TotalGrenadeKills") AS INT64) ;;
+  }
+
+  dimension: power_weapon_kills_per_grab {
+    type: number
+    sql: CASE WHEN ${total_power_weapon_grabs} != 0 THEN ${total_power_weapon_kills}/${total_power_weapon_grabs}
+              ELSE 0
+              END ;;
+    value_format_name: decimal_2
+  }
+
+  dimension: percentage_of_power_weapon_kills {
+    type: number
+    sql: CASE WHEN ${total_kills} != 0 THEN ${total_power_weapon_kills}/${total_kills}
+              ELSE 0
+              END ;;
+    value_format_name: percent_2
+  }
+
+  dimension: percentage_of_grenade_kills {
+    type: number
+    sql: CASE WHEN ${total_kills} != 0 THEN ${total_grenade_kills}/${total_kills}
+              ELSE 0
+              END;;
+  }
+
 
 ############ MEASURES ############
 
@@ -204,6 +234,24 @@ measure: average_win_percentage {
   value_format_name: percent_2
 }
 
+measure: average_percentage_of_grenade_kills {
+  type: average
+  sql: ${percentage_of_grenade_kills} ;;
+  value_format_name: percent_2
+}
+
+measure: average_percentage_of_power_weapon_kills {
+  type: average
+  sql: ${percentage_of_power_weapon_kills} ;;
+  value_format_name: percent_2
+}
+
+measure: average_power_weapon_kills_per_grab {
+  type: average
+  sql: ${power_weapon_kills_per_grab} ;;
+  value_format_name: decimal_2
+}
+
 measure: sum_of_total_headshots {
   type: sum
   sql: ${total_headshots} ;;
@@ -216,9 +264,21 @@ measure: sum_of_total_shots {
   hidden: yes
 }
 
+measure: sum_of_power_weapon_kills {
+  type: sum
+  sql: ${total_power_weapon_kills} ;;
+}
+
+measure: sum_of_kills {
+  type: sum
+  sql: ${total_kills} ;;
+}
+
 measure: average_headshot_percentage {
   type: number
-  sql: ${sum_of_total_headshots}/${sum_of_total_shots} ;;
+  sql: CASE WHEN ${sum_of_total_shots} != 0 THEN ${sum_of_total_headshots}/${sum_of_total_shots}
+            ELSE 0
+            END ;;
   value_format_name: percent_2
 }
 

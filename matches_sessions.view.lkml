@@ -1,3 +1,5 @@
+include: "*.view.lkml"
+
 view: matches_sessions {
   derived_table: {
     sql: SELECT
@@ -20,7 +22,6 @@ view: matches_sessions {
                      ELSE NULL
                      END))/60.0 ), 0) AS matches_sum_match_duration_in_minutes
       FROM halo_5_dataset.matches  AS matches
-
       GROUP BY 1,2,3
       ORDER BY 2 DESC
        ;;
