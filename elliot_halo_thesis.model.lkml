@@ -13,6 +13,9 @@ datagroup: elliot_halo_thesis_default_datagroup {
 
 persist_with: elliot_halo_thesis_default_datagroup
 
+explore: testing_stuff {
+}
+
 explore: matches {
   join: players {
     type: left_outer

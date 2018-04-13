@@ -17,7 +17,6 @@ view: matches_avg_kill_death {
         gamertag, playlist_id ;;
 
     sql_trigger_value: SELECT 1 ;;
-    sql_trigger_value: SELECT 2 ;;
   }
 
   dimension: compound_gamertag_playlistid {

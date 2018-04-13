@@ -1,3 +1,4 @@
+include: "*.view.lkml"
 
 view: matches {
   sql_table_name: halo_5_dataset.matches ;;
@@ -8,8 +9,6 @@ view: matches {
       win_percentage
     ]
   }
-
-  ############ JSON BLOBS ############
 
   dimension: results {
     type: string
@@ -23,6 +22,7 @@ view: matches {
     type: date
     description: "Use this filter for period analysis"
   }
+
 
 # SOMETHING ABOUT -1!
 
@@ -75,17 +75,20 @@ view: matches {
 
   dimension: gamertag {
     type: string
-    sql: JSON_EXTRACT_SCALAR(${results},"$.Players[0].Player.Gamertag") ;;
     drill_fields: [match_result, winning_team_score, count]
-    link: {
-      label: "hello"
-      url:"https://google.com/{{ matches.match_rank._value }}"
-    }
+    sql: JSON_EXTRACT_SCALAR(${results},"$.Players[0].Player.Gamertag");;
   }
 
   dimension: match_rank {
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].Rank") AS FLOAT64) ;;
+  }
+
+  dimension: tier_rank {
+    type: tier
+    sql: ${match_rank} ;;
+    tiers: [1,3]
+    style: relational
   }
 
   dimension: match_result_code {
@@ -101,6 +104,7 @@ view: matches {
               WHEN ${match_result_code} = 1 THEN "Loss"
               ELSE "DNF"
               END ;;
+
   }
 
   dimension: kills {
@@ -139,6 +143,11 @@ view: matches {
     datatype: date
     timeframes: [date,day_of_week,week,month,raw]
     sql: EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(${results},"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP));;
+  }
+
+  dimension: match_as_string {
+    type: string
+    sql: CAST(${match_completed_date_date} AS STRING) ;;
   }
 
   # GOIGN IN A PDT
@@ -349,5 +358,19 @@ view: matches {
   measure: win_percentage {
     type: number
     sql: ${count_of_wins}/${count} ;;
+    value_format_name: percent_2
+  }
+
+  measure: test {
+    type: count_distinct
+    sql: ${gamertag} ;;
+    filters: {
+      field: results
+      value: "hey"
+    }
+    filters:  {
+      field: results
+      value: "listen"
+    }
   }
 }
