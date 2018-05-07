@@ -288,4 +288,12 @@ measure: sum_of_total_games_played{
   value_format_name: decimal_0
 }
 
+measure: average_kill_death {
+  type: average
+  sql: CASE WHEN ${total_deaths} != 0 THEN ${total_kills}/${total_deaths}
+            ELSE ${total_kills}/1
+            END ;;
+  value_format_name: decimal_3
+}
+
 }

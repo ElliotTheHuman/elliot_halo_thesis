@@ -23,6 +23,11 @@ view: matches {
     description: "Use this filter for period analysis"
   }
 
+  dimension: yesno_test {
+    type: yesno
+    sql: ${kills} > 10 ;;
+  }
+
 
 # SOMETHING ABOUT -1!
 
@@ -87,7 +92,7 @@ view: matches {
   dimension: tier_rank {
     type: tier
     sql: ${match_rank} ;;
-    tiers: [1,3]
+    tiers: [4,8]
     style: relational
   }
 

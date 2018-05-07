@@ -41,6 +41,13 @@ view: matches_avg_kill_death {
     value_format: "0.00"
   }
 
+  dimension: tier_rank {
+    type: tier
+    sql: ${average_kill_death_ratio_over_matches} ;;
+    tiers: [1,2]
+    style:  classic
+  }
+
   measure: max_average_kilL_death_ratio_over_matches {
     type: max
     sql: ${average_kill_death_ratio_over_matches} ;;
