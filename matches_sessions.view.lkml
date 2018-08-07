@@ -25,6 +25,8 @@ view: matches_sessions {
       GROUP BY 1,2,3
       ORDER BY 2 DESC
        ;;
+
+      sql_trigger_value: SELECT 1 ;;
   }
 
   dimension: compound_primary_key {
