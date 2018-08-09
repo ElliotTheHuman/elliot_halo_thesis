@@ -10,7 +10,7 @@ view: matches_avg_kill_death {
         AVG(CASE WHEN CAST(JSON_EXTRACT_SCALAR(Results,"$.Players[0].TotalDeaths") AS INT64) = 0
                 THEN CAST(JSON_EXTRACT_SCALAR(Results,"$.Players[0].TotalKills") AS INT64)*1.0/1
              ELSE CAST(JSON_EXTRACT_SCALAR(Results,"$.Players[0].TotalKills") AS INT64)*1.0/CAST(JSON_EXTRACT_SCALAR(Results,"$.Players[0].TotalDeaths") AS INT64)
-             END) AS average_kill_death_ratio_over_matches as
+             END) as
             {% if _model._name == "elliot_halo_thesis"%}
             label1
             {% else %}
