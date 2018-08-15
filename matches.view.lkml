@@ -10,6 +10,10 @@ view: matches {
     ]
   }
 
+  dimension: broken_field {
+    sql:  aoisdnfsd ;;
+  }
+
   dimension: results {
     type: string
     hidden: yes
@@ -348,7 +352,8 @@ view: matches {
     sql: ${count_of_DNFs}/${count} ;;
     value_format_name: percent_2
     # Drill field idea: Hey, how many of these did not finishes come from different places?
-    drill_fields: [metadata_playlist.name,matches.count]
+    drill_fields: [matches.match_as_string,matches.count,matches.count_of_wins]
+    link: {label: "Some Label" url: "{{ link }}&sorts=matches.count_of_wins+desc&limit=20" }
   }
 
   measure: count_of_wins {

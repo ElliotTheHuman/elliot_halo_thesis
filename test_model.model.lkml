@@ -17,4 +17,4 @@ include: "*.view.lkml"         # include all views in this project
 #   }
 # }
 
-explore: matches_avg_kill_death {}
+# explore: matches_avg_kill_death {}

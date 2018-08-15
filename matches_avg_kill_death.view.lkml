@@ -1,5 +1,7 @@
 include: "*.view.lkml"
 
+explore: matches_avg_kill_death {}
+
 # Using this PDT to do expensive calcs and to do measures of measures
 view: matches_avg_kill_death {
   derived_table: {
@@ -11,7 +13,7 @@ view: matches_avg_kill_death {
                 THEN CAST(JSON_EXTRACT_SCALAR(Results,"$.Players[0].TotalKills") AS INT64)*1.0/1
              ELSE CAST(JSON_EXTRACT_SCALAR(Results,"$.Players[0].TotalKills") AS INT64)*1.0/CAST(JSON_EXTRACT_SCALAR(Results,"$.Players[0].TotalDeaths") AS INT64)
              END) as
-            {% if _model._name == "elliot_halo_thesis"%}
+            {% if _model._name == "matches_avg_kill_death"%}
             label1
             {% else %}
             label2

@@ -17,7 +17,7 @@ persist_for: "1 hour"
 explore: testing_stuff {
 }
 
-explore: matches_avg_kill_death {}
+# explore: matches_avg_kill_death {}
 
 explore: matches {
   persist_for: "30 minutes"
