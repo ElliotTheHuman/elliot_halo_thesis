@@ -3,7 +3,7 @@ connection: "halo_database_1"
 # include all the views
 include: "*.view.lkml"
 
-
+include: "*.dashboard.lkml"
 
 datagroup: elliot_halo_thesis_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
