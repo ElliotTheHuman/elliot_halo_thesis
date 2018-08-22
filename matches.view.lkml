@@ -10,6 +10,32 @@ view: matches {
     ]
   }
 
+  dimension: test_shit {
+    type: string
+    case: {
+      when: {
+        label: "1 - something"
+        sql: 1=1 ;;
+      }
+      when: {
+        label: "2 - something"
+        sql: 1=1 ;;
+      }
+      when: {
+        label: "a"
+        sql: 1=1 ;;
+      }
+      when: {
+        label: "b"
+        sql: 1=1 ;;
+      }
+      when: {
+        label: "5 - something"
+        sql: 1=1 ;;
+      }
+    }
+  }
+
   dimension: broken_field {
     sql:  aoisdnfsd ;;
   }
