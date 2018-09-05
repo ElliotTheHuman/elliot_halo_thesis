@@ -5,6 +5,7 @@ explore: matches_avg_kill_death {}
 # Using this PDT to do expensive calcs and to do measures of measures
 view: matches_avg_kill_death {
   derived_table: {
+    partition_keys: ["playlist_id"]
     sql:
       SELECT
         JSON_EXTRACT_SCALAR(Results,"$.Players[0].Player.Gamertag") AS gamertag,
