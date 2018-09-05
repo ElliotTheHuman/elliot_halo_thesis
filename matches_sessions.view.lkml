@@ -8,6 +8,7 @@ view: matches_sessions {
     sql: SELECT
         EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) AS matches_match_completed_date_date
       FROM halo_5_dataset.matches  AS matches
+      WHERE EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) IS NOT NULL
       GROUP BY 1
       ORDER BY 1 ASC
        ;;
