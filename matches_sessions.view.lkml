@@ -2,28 +2,12 @@ include: "*.view.lkml"
 
 view: matches_sessions {
   derived_table: {
+
     sql: SELECT
-        CAST(CAST(EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) AS TIMESTAMP) AS DATE) AS matches_match_completed_date_date,
-        JSON_EXTRACT_SCALAR(matches.Results,"$.Players[0].Player.Gamertag")  AS matches_gamertag,
-        COALESCE(SUM(((CASE WHEN SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),3,1) = "M" THEN CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),1,2) AS INT64)
-                     ELSE CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),1,1) AS INT64)
-                     END)*60 + (CASE WHEN (CASE WHEN SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),3,1) = "M" THEN CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),1,2) AS INT64)
-                     ELSE CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),1,1) AS INT64)
-                     END) >= 10 AND SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),5,1) = "." THEN CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),4,1) AS INT64)
-                     WHEN (CASE WHEN SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),3,1) = "M" THEN CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),1,2) AS INT64)
-                     ELSE CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),1,1) AS INT64)
-                     END) >= 10 AND SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),6,1) = "." THEN CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),4,2) AS INT64)
-                     WHEN (CASE WHEN SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),3,1) = "M" THEN CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),1,2) AS INT64)
-                     ELSE CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),1,1) AS INT64)
-                     END) < 10 AND SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),4,1) = "." THEN CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),3,1) AS INT64)
-                     WHEN (CASE WHEN SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),3,1) = "M" THEN CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),1,2) AS INT64)
-                     ELSE CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),1,1) AS INT64)
-                     END) < 10 AND SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),5,1) = "." THEN CAST(SUBSTR((LTRIM(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchDuration"),"PT")),3,2) AS INT64)
-                     ELSE NULL
-                     END))/60.0 ), 0) AS matches_sum_match_duration_in_minutes
+        EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) AS matches_match_completed_date_date
       FROM halo_5_dataset.matches  AS matches
-      GROUP BY 1,2,3
-      ORDER BY 2 DESC
+      GROUP BY 1
+      ORDER BY 1 DESC
        ;;
 
       sql_trigger_value: SELECT 1 ;;
