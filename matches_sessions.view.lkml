@@ -10,7 +10,6 @@ view: matches_sessions {
       FROM halo_5_dataset.matches  AS matches
       WHERE EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) IS NOT NULL
       GROUP BY 1
-      ORDER BY 1 ASC
        ;;
 
       sql_trigger_value: SELECT 1 ;;
