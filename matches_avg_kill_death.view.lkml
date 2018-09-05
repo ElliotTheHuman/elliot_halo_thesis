@@ -22,7 +22,7 @@ view: matches_avg_kill_death {
       FROM
         matches
       GROUP BY
-        gamertag, playlist_id ;;
+        1, 2 ;;
 
     sql_trigger_value: SELECT 1 ;;
   }
