@@ -2,14 +2,21 @@
   title: lookml_dash_test
   layout: newspaper
   elements:
-  - title: Untitled
-    name: Untitled
+  - title: Sad face Jeffty
+    name: Sad face Jeffty
     model: ecommerce
     explore: orders
     type: looker_column
     fields:
     - orders.count
     - users.country
+    - users.city
+    pivots:
+    - users.city
+    filters:
+      users.city: New York,Los Angeles,Madison
+    sorts:
+    - orders.count desc 0
     limit: 10
     stacking: ''
     show_value_labels: false
@@ -37,12 +44,12 @@
     show_totals_labels: false
     show_silhouette: false
     totals_color: "#808080"
+    listen: {}
     row: 0
     col: 0
     width: 8
     height: 6
-  - title: Untitled
-    name: Untitled
+  - title: Something else
     model: elliot_halo_thesis
     explore: matches
     type: table
@@ -76,6 +83,7 @@
     show_silhouette: false
     totals_color: "#808080"
     series_types: {}
+    listen: {}
     row: 0
     col: 8
     width: 8

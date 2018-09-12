@@ -2,6 +2,7 @@ connection: "halo_database_1"
 
 # include all the views
 include: "*.view.lkml"
+include: "*.dashboard"
 
 datagroup: elliot_halo_thesis_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -14,6 +15,8 @@ persist_for: "1 hour"
 
 explore: testing_stuff {
 }
+
+explore: test_table {}
 
 # explore: matches_avg_kill_death {}
 

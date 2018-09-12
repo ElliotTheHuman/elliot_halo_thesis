@@ -115,6 +115,7 @@ view: matches {
   }
 
   dimension: match_rank {
+    can_filter: yes
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].Rank") AS FLOAT64) ;;
   }

@@ -3,11 +3,9 @@ include: "*.view.lkml"
 view: matches_sessions {
   derived_table: {
 
-    partition_keys: ["date"]
-
     sql: SELECT
         EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) AS date,
-        100
+        1000
       FROM halo_5_dataset.matches  AS matches
       WHERE EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) IS NOT NULL
        ;;
