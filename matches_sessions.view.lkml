@@ -7,7 +7,7 @@ view: matches_sessions {
 
     sql: SELECT
         EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) AS date,
-        1000
+        10000
       FROM halo_5_dataset.matches  AS matches
       WHERE EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) IS NOT NULL
        ;;
