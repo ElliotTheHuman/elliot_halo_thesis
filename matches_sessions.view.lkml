@@ -3,6 +3,8 @@ include: "*.view.lkml"
 view: matches_sessions {
   derived_table: {
 
+    partition_keys: ["date"]
+
     sql: SELECT
         EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) AS date,
         1000
