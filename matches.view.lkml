@@ -58,6 +58,12 @@ view: matches {
     sql: ${kills} > 10 ;;
   }
 
+  parameter: test_param {
+    type: string
+    suggest_persist_for: "0 minute"
+    default_value: "Hello"
+  }
+
 
 # SOMETHING ABOUT -1!
 
@@ -146,6 +152,7 @@ view: matches {
   dimension: kills {
     type: number
     sql: CAST(JSON_EXTRACT_SCALAR(${results},"$.Players[0].TotalKills") AS INT64) ;;
+    suggest_persist_for: "0 minutes"
   }
 
   dimension: deaths {
@@ -395,7 +402,7 @@ view: matches {
   measure: win_percentage {
     type: number
     sql: ${count_of_wins}/${count} ;;
-    value_format_name: percent_2
+    value_format: "0.000"
   }
 
   measure: test {
