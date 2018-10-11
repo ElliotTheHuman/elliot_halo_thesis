@@ -3,49 +3,17 @@ include: "*.view.lkml"
 view: matches_sessions {
   derived_table: {
 
-    partition_keys: ["date"]
+    sql: SELECT {% parameter test_param %};;
 
-    sql: SELECT
-        EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) AS date,
-        10000
-      FROM halo_5_dataset.matches  AS matches
-      WHERE EXTRACT(DATE FROM CAST(JSON_EXTRACT_SCALAR(matches.Results,"$.MatchCompletedDate.ISO8601Date") AS TIMESTAMP)) IS NOT NULL
-       ;;
-
-      sql_trigger_value: SELECT 1 ;;
+      persist_for: "24 hours"
   }
 
-  dimension: compound_primary_key {
-    hidden: yes
+  parameter: test_param {
     type: string
-    sql: CONCAT(${TABLE}.gamertag,' ',${TABLE}.matches_match_completed_date_date) ;;
-    primary_key: yes
   }
 
-  dimension_group: completed_date {
-    type: time
-    datatype: date
-    timeframes: [date]
-    sql: ${TABLE}.matches_match_completed_date_date ;;
-  }
-
-  dimension: gamertag {
+  dimension: test_dim {
     type: string
-    sql: ${TABLE}.matches_gamertag ;;
-  }
-
-  dimension: session_duration {
-    type: number
-    sql: ${TABLE}.matches_sum_match_duration_in_minutes ;;
-  }
-
-  measure: average_session_duration {
-    type: average
-    sql: ${session_duration} ;;
-  }
-
-  measure: max_session_duration {
-    type: max
-    sql: ${session_duration} ;;
+    sql: 'test' ;;
   }
 }

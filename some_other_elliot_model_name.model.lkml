@@ -16,6 +16,8 @@ persist_for: "1 hour"
 explore: testing_stuff {
 }
 
+explore: matches_sessions {}
+
 explore: test_table {}
 
 # explore: matches_avg_kill_death {}
