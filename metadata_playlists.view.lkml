@@ -31,4 +31,20 @@ view: metadata_playlists {
     type: yesno
     sql: ${name} IN ("Slayer", "Free-for-All","Team Arena","HaloWC Preview","Breakout","Snipers","Doubles","SWAT") ;;
   }
+
+  set: some_set {
+    fields: [name]
+  }
+
+  ############ Test ############
+
+  filter: test {
+    type: string
+  }
+
+  dimension: some_dim {
+    type: string
+    sql: 1 ;;
+    html: {{ _filters['metadata_playlists.test'] }} ;;
+  }
 }
