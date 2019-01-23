@@ -7,21 +7,7 @@ view: matches_avg_kill_death {
   derived_table: {
     sql:
       SELECT
-        JSON_EXTRACT_SCALAR(Results,"$.Players[0].Player.Gamertag") AS gamertag,
-        JSON_EXTRACT_SCALAR(Results,"$.HopperId") AS playlist_id,
-        AVG(CASE WHEN CAST(JSON_EXTRACT_SCALAR(Results,"$.Players[0].TotalDeaths") AS INT64) = 0
-                THEN CAST(JSON_EXTRACT_SCALAR(Results,"$.Players[0].TotalKills") AS INT64)*1.0/1
-             ELSE CAST(JSON_EXTRACT_SCALAR(Results,"$.Players[0].TotalKills") AS INT64)*1.0/CAST(JSON_EXTRACT_SCALAR(Results,"$.Players[0].TotalDeaths") AS INT64)
-             END) as
-            {% if _model._name == "matches_avg_kill_death"%}
-            label1
-            {% else %}
-            label2
-            {% endif %}
-      FROM
-        matches
-      GROUP BY
-        gamertag,playlist_id  ;;
+        eawiofneiurngiueriufbns  ;;
 
     sql_trigger_value: SELECT 1 ;;
   }
